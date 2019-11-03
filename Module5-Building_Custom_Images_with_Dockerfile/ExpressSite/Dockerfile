@@ -1,17 +1,23 @@
-FROM node:latest
+FROM node:latest        
+# Pulls the latest node image. New image will be built on top of this.
 
-LABEL author="Dan Wahlin"
+MAINTAINER Sudarshan Veeramreddy
 
-ENV NODE_ENV=production 
+WORKDIR /var/www	
+# Commands will be run from this director
+
+COPY . .		
+# Copy all contents in current directory to workdir in the image.
+
 ENV PORT=3000
 
-WORKDIR   /var/www
-COPY      . .
+VOLUME ["/logs"]	
+# we can provide multiple volume paths. This will be stored in host system. If  we give, /var/www here, it mounting it will wipe out contents in the folder. So RUN npm install etc would be gone and container wouldn't come up.
 
-RUN       npm install
-
-VOLUME ["/var/www"]
+RUN npm install		
+# npm install in workdirector
 
 EXPOSE $PORT
 
-ENTRYPOINT ["npm", "start"]
+ENTRYPOINT ["npm", "start"]   
+# command to run when container starts.
